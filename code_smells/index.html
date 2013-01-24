@@ -19,10 +19,11 @@
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css">
 
-		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<!-- If the query includes 'print-pdf', use the PDF print sheet 
 		<script>
 			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
 		</script>
+		-->
 
 		<style>
 			#spil-logo{
@@ -39,12 +40,12 @@
 				max-width: 8%;
 			}
 			.big-code {
-				top:-480px;
+				
 				width: 1246px !important;
 				left: -550px !important;
 			}
 			.big-code code{
-				max-height: 1058px;
+				max-height: 700px;
 			}
 		</style>
 
@@ -65,106 +66,368 @@
 					<h1>Code Smells</h1>
 					<h3>Recognising smelly code</h3>
 				</section>
-
+				<section>
+						We are going to see a piece of code for 4 seconds.<br>
+						Try to understand what it does
+				</section>
 				<section class="big-code">
-					<section>
 						<pre><code contenteditable>
-    public function getData($page_type, $category_id = null, $subcategory_id = null)
-    {
-        if ($page_type != 'all') {
-            $test_all = $this->getData('all');
-            if (is_array($test_all)) {
-                return $test_all;
-            } else {
-                if ($page_type != 'all_nogamepage') {
-                    $test_allnogamepage = $this->getData('all_nogamepage');
-                    if (is_array($test_allnogamepage)) {
-                        return $test_allnogamepage;
-                    }
-                }
-            }
-        }
-        
+class cheetahClass
+{
+	public function doStuff()
+	{
+		$db = $this->getDb();
+		$query = 'SELECT email FROM receivers WHERE active = 1';
 
-        $conditions = array(
-            'site_id' => $this->_controller->site_id,
-            'page_type' => $page_type
-       );
+		$rows = $db->fetchRows($query);
+		$addresses = array();
 
-        if ($category_id != null && $category_id > 0) {
-            $conditions['category_id'] = $category_id;
+		foreach($rows as $row){
+			$addresses[] = trim($row->email);
+			if(count($addresses) > 0){
+				foreach($addresses as $address){
+					$email = new Email();
+					$email->to = $address['email'];
+					$email->subject = 'test from cheetahmail';
+					if(count($address->sites) > 0){
+						$email->body = 'You are  in:'. PHP_EOL;
+						foreach($address->sites as $site){
+							$email->body .= '- ' . $site;
+							$email->body .= PHP_EOL;
+						}
+					}
+					$email->body .= PHP_EOL;
+					$email->send();
+				}
 
-            if ($subcategory_id != null && $subcategory_id > 0) {
-                $conditions['subcategory_id'] = $subcategory_id;
-            }
-        }
-
-        $takeovers = $this->_controller->Sitetakeover->find(
-            "first", array(
-                'conditions' => $conditions,
-                'limit' => 1
-            )
-        );
-
-        return $this->prepareFinalArray($takeovers);
-    }
+			}
+		}
+	}
+}
 					</code></pre>
 
 					</section>
 					<section>
-						<h2>How</h2>
-						<p>
-							go to <a href="http://da067.priv.spillgroup.org">da067</a> and create a new project
-						</p>
+						Any clue?
 					</section>
 					<section>
-						<h2>How</h2>
-						<p>
-							You can automate the run with <a href="http://da030.priv.spillgroup.org:8080">Jenkins</a>
-						</p>
-					</section>
-				</section>
+						<pre><code contenteditable>
+class emailManager
+{
+	public function sendTestEmails()
+	{
+		$addresses = $this->getTestRecipientEmails();
+		$this->sendEmail($addresses);
+	}
+}
+					</code></pre>
 
-				<section>
-					<section>
-						<h3>Funny things in our codebases</h3>
-						<p>
-							<img src="./img/funny1.png">
-						</p>
 					</section>
 					<section>
-						<h3>Funny things in our codebases</h3>
-						<p>
-							<img src="./img/funny2.png">
-						</p>
+						And now?
+					</section>
+					<section class="big-code">
+						<pre><code contenteditable>
+class cheetahClass
+{
+	public function doStuff()
+	{
+		$db = $this->getDb();
+		$query = 'SELECT email FROM receivers WHERE active = 1';
+
+		$rows = $db->fetchRows($query);
+		$addresses = array();
+
+		foreach($rows as $row){
+			$addresses[] = trim($row->email);
+			if(count($addresses) > 0){
+				foreach($addresses as $address){
+					$email = new Email();
+					$email->to = $address['email'];
+					$email->subject = 'test from cheetahmail';
+					if(count($address->sites) > 0){
+						$email->body = 'You are in:'. PHP_EOL;
+						foreach($address->sites as $site){
+							$email->body .= '- ' . $site;
+							$email->body .= PHP_EOL;
+						}						
+					}
+
+				}
+				$email->body .= PHP_EOL;
+				$email->send();
+			} 			
+		}
+	}
+}
+					</code></pre>
+
+					</section>
+
+<aside class="notes">
+	<pre>
+		Problems: 
+			- Levels of nesting
+			- no DB abstraction/no data model
+			- Uncommunicative names
+	</pre>
+</aside>
+
+
+					<section class="big-code">
+						Long methods
+						<pre><code contenteditable>
+    public function index($nicename, $page=1)
+    {
+    	$this->categoryContext = null;
+        $category = $this->Categorydetail->findByCategoryNicename($nicename);
+        if (!$category) $this->cakeError('404');
+
+        //canonical link
+        $url = Router::url();
+        $url_parts = explode('/', $url);
+        $this->set('canonicalurl', "/" . strtolower($url_parts[1]) . '/' . strtolower($nicename) . '.html');
+
+        // get subcategories box
+        $subcategories_all = $this->getSubcategoryBoxes(
+            $category['Category']['id']
+        );
+        // check if it contains subcats
+        if (sizeof($subcategories_all)==0) {
+            $this->cakeError('404');
+        }
+
+        // setting title etc according to seo inclusions
+        $this->setMetaData('category', $category);
+
+        //get popular games
+        $popularbox = $this->getPopularboxgames(
+            Configure::read('popularboxGamesCount'),
+            $category['Category']['id']
+        );
+
+        // get first hot game box
+        $firsthotgamebox = array($popularbox[0]);
+
+        // get hot games box
+        $temp = array_shift($popularbox);
+        $hotgamesbox = $popularbox;
+
+        $subcategories = array();
+        $moresubcategories = array();
+
+        $count = sizeof($subcategories_all);
+
+        // NOW WE USE CMS
+        $results = $this->Catconfig->find('all');
+        $rules = array();
+        $rule = null;
+        $default_rule = 12;
+
+        if (!$results) $results = array();
+
+        if (sizeof($results)>0) {
+            foreach ($results as $item) {
+                if (intval($item['Catconfig']['boxes']) > 0) {
+                    $rules[$item['Catconfig']['subcategories']] =
+                        $item['Catconfig']['boxes'];
+                }
+            }
+        } else {
+            $rules = $this->Catconfig->constructDefaultValues();
+        }
+
+        if (array_key_exists($count, $rules)) {
+            $rule = $rules[$count];
+        } else if (array_key_exists(33, $rules)) {
+            $rule = $rules[33]; // >32
+        } else {
+            $rule = $default_rule;
+        }
+
+        $subcategories = array_slice($subcategories_all, 0, $rule);
+        $moresubcategories = array_slice($subcategories_all, $rule);
+
+        $subcatmostplayedgames = array();
+        // 7 most played games for each subcategory
+        foreach ($subcategories_all as $subcategory) {
+            $subcatmostplayedgames[$subcategory['Subcategorydetail']['subcategory_nicename']] =
+                $this->getSubcategyMostPlayed(
+                    Configure::read('subcatboxGamesCount'),
+                    $subcategory['Subcategorydetail']['subcategory_id'],
+                    $category['Category']['id']
+                );
+        }
+
+        // delete the <meta> tag if we want to hide the game
+        if ($category['Category']['invisible'] == 1) {
+        	$this->set('dont_index', true);
+        }
+        
+        $this->set(compact('category', 'page'));
+
+        // site takeover
+        $sitetakeover = $this->setTakeover($category['Category']['id']);
+        $this->set('sitetakeover', $sitetakeover);
+
+        // extra page codes
+        $extrapagecodes = $this->Extracode->prepareAllCodes(
+            'category',
+            $category['Category']['id']
+        );
+        $this->set('extrapagecodes', $extrapagecodes);
+
+        $headcodes = $this->Extracode->prepareAllCodes('category', $category['Category']['id'], null, 'head');
+        $this->set('headcodes', $headcodes);
+
+        // breadcrumb
+        $categorydetail = $category['Categorydetail'];
+        $this->setBreadCrumb($categorydetail);
+
+        // leaderboard banner
+        if ($sitetakeover === false || !is_array($sitetakeover)) {
+             // display ONLY when there's no SITE TAKEOVER
+            $leaderboard = $this->getLeaderboardBanner(
+                'category',
+                $category['Category']['catname_lid']
+            );
+        } else {
+            $leaderboard = false;
+        }
+        $rect_advert = $this->getRectAdvertBanner(
+            'category',
+            $category['Category']['catname_lid']
+        );
+        $this->set('rect_advert', $rect_advert);
+
+        // set rating Weight
+        $ratingWeight = $this->ratingWeight;
+
+        //floor ad
+        $this->set(
+            'floorad', $this->Floorads->getData(
+                'categorypage',
+                $category['Category']['id']
+            )
+        );
+
+        // SETS
+        $this->set(
+            compact(
+                'firsthotgamebox', 'categorydetail', 'hotgamesbox',
+                'subcategories', 'moresubcategories', 'subcatmostplayedgames',
+                'leaderboard', 'ratingWeight'
+            )
+        );
+
+        //seo content box
+        $seocontentboxes = $this->Seocontentbox->find('all',
+            array(
+                'conditions' => array(
+                    'site_id' => $this->site_id,
+                    'category_id' => $category['Category']['id'],
+                    'subcategory_id' => null,
+                    'active' => '1'
+                ),
+                'order' => array('sort') 
+            )
+        );
+        $this->set('seocontentboxes', $seocontentboxes);
+        if($this->inclusions->get('tags', 'config') == 'true') {
+            $this->set('tags',$this->GameTag->getTagsByCategoryId($category['Category']['id'], $this->site_id, Configure::read('tags_rows_page') * 4));
+        }
+        $this->categoryContext .= $seocontentboxes;
+    }
+<aside class="notes">
+	<pre>
+		Problems: 
+			- Impossible to remember previos context from line 15
+			- what does $this->categoryContext contain after 10 lines?
+			- Inline comments mark the point where this file can be splitted
+	</pre>
+</aside>
+					</code></pre>
+
 					</section>
 					<section>
-						<h3>Funny things in our codebases</h3>
-						<p>
-							<img src="./img/funny3.png">
-						</p>
+						Smells can come also from OO anti-patterns:
+						<ul>
+							<li> God Object </li>
+							<li> Data Class </li>
+							<li> Lazy Class </li>
+							<li> Tight Coupling </li>
+<aside class="notes">
+	<pre>
+		God Object: 
+			- An object does everything and asks for little help (huge controller)
+		Data Class:
+			- Classes with only getters and setters (data should be moved to whom is nedding it)
+		Lazy Class:
+			- Small classes not very used. May be moved to an inline class or move it's responsibility
+			to more meaningful classes
+	</pre>
+</aside>
 					</section>
-				</section>
+					<section>
+						<h2>Tight Coupling</h2>
+						<pre><code contenteditable>
+class HTMLHelper
+{
+	protected $metaData;
+	protected $name;
+
+	public function __construct($pageName, $metaTags)
+	{
+		$this->metaData = new MetaData($metaTags);
+		$this->name = $pageName;
+	}
+
+	public function getMetaTags()
+	{
+		return $this->metaData->getTags();
+	}
+}
+						</code></pre>
+<aside class="notes">
+	<pre>
+		Problem: 
+			- impossible to to test because id depends so much on Metatags class
+			- this class will have to change if Metatags class changes
+		Solution: dependency injection
+	</pre>
+</aside>
+					</section>
 
 				<section>
-					<h2>What can we do with it</h2>
-					<ul>
-						<li>Track the quality trends of our codebases</li>
-						<li>Use in code reviews</li>
-						<li>Learn what not to do</li>
-						<li>Refactor?</li>
-						<li>Use if <strong>meaningful</strong></li>
-					</ul>
-				</section>
+						<h2>Dependency injection</h2>
+						<pre><code contenteditable>
+class HTMLHelper
+{
+	protected $metaData;
+	protected $name;
 
-				<section>
-					<h2>And in the future</h2>
-					Plug our <a href="https://wiki.spilgames.com/wiki/Coding_Standards">Spil coding standards</a>
-				</section>
+	public function __construct($pageName,MetaData $metaData)
+	{
+		$this->metaData = $metaData;
+		$this->name = $pageName;
+	}
 
-				<section>
-					<img src="./img/codereview.jpg">
-				</section>
+	public function getMetaTags()
+	{
+		return $this->metaData->getTags();
+	}
+}
+						</code></pre>
+<aside class="notes">
+	<pre>
+		Problem: 
+			- impossible to to test because id depends so much on Metatags class
+			- this class will have to change if Metatags class changes
+		Solution: dependency injection
+	</pre>
+</aside>
+					</section>
+				
 
 				<section>
 					<h2>Useful links</h2>
@@ -206,6 +469,14 @@
 					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
 				]
 			});
+
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				var currentSlide = Reveal.getIndices();
+				if(currentSlide.h === 2 || currentSlide.h === 4){
+					window.setTimeout("Reveal.next()", 4000);
+				}
+			    // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+			} );
 
 		</script>
 

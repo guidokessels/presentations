@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>JS Course - Dom Manipulation</title>
+
+		<meta name="description" content="Chapter 12 of the Spil JS Course">
+		<meta name="author" content="Emilio Rodriguez">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+		<link rel="stylesheet" href="./reveal.js/css/reveal.min.css">
+		<link rel="stylesheet" href="./reveal.js/css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet 
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+		-->
+
+		<style>
+			#spil-logo{
+				position: absolute;
+				top: 0;
+				left: 20px;
+				max-width: 16%;
+			}
+		</style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<img id="spil-logo" src="./img/spillogo.jpg">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>JS Course</h1>
+					<h3>DOM Manipulation</h3>
+				</section>
+				<section>
+						<h3>What is The Document-Object Model?</h3>
+                        <p>
+                            <img src="./img/dom1.png">
+                        </p>
+
+<aside class="notes">
+    <pre>
+    </pre>
+</aside>
+				</section>
+
+				<section>
+                    <h3>Basic functionality</h3>
+						<pre><code contenteditable>
+document;
+document.body;
+document.body.parentNode;
+document.body.childNodes.length;
+
+document.body.firstChild;
+document.body.nextSibling;
+
+document.body.innerHTML;
+document.body.innerHTML="&lt;p&gt;I'm an added element&lt;/p&gt;";
+					</code></pre>
+
+				</section>
+
+                <section>
+                    <h3>Retrieving Elements from the DOM</h3>
+                        <pre><code contenteditable>
+var picture = document.getElementById("gbi4i");
+picture.src = "http://www.spilgames.com/wp-content/themes/spilgames2/images/logo.png";
+
+var firstDiv = document.getElementsByTagName("div")[18];
+firstDiv.innerHTML = "You cannot search anymore";
+
+document.getElementsByClassName("ctr-p")[0].style.zoom = 1.5
+                    </code></pre>
+<aside class="notes">
+    <pre>
+        Run this in gooogle.nl
+    </pre>
+</aside>
+                </section>
+
+					<section>
+                        <h3>Accessing the DOM is expensive!</h3>
+                        <pre><code contenteditable>
+var width = document.getElementById("gbi4i").width;
+var height = document.getElementById("gbi4i").height;
+                    </code></pre>
+                    </section>
+                    
+                    <section>
+                        This performs better:
+                        <pre><code contenteditable>
+var picture = document.getElementById("gbi4i");
+var width = picture.width;
+var height = picture.height;
+                    </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>What can you modify of an element?</h3>
+                        <pre><code contenteditable>
+var picture = document.getElementById("gbi4i");
+for(var propertyName in picture) {
+    if(typeof picture[propertyName]){
+        console.log(propertyName);
+    }
+}
+                    </code></pre>
+                    <a href="http://krook.org/jsdom/HTMLImageElement.html">HTMLImageElement</a>
+<aside class="notes">
+    <pre>
+        It depends on every element
+    </pre>
+</aside>
+                    </section>
+			</div>
+
+		</div>
+
+		<script src="./reveal.js/lib/js/head.min.js"></script>
+		<script src="./reveal.js/js/reveal.min.js"></script>
+
+		<script>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
