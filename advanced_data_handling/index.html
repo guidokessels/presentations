@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>JS Course - Advanced Data Handling</title>
+
+		<meta name="description" content="Chapter 12 of the Spil JS Course">
+		<meta name="author" content="Emilio Rodriguez">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+		<link rel="stylesheet" href="./reveal.js/css/reveal.min.css">
+		<link rel="stylesheet" href="./reveal.js/css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet 
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+		-->
+
+		<style>
+			#spil-logo{
+				position: absolute;
+				top: 0;
+				left: 20px;
+				max-width: 16%;
+			}
+		</style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<img id="spil-logo" src="./img/spillogo.jpg">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>JS Course</h1>
+					<h3>Advanced Data Handling</h3>
+				</section>
+				<section>
+						<h3>What can we do with data?</h3>
+                        <ul>
+                        	<li>Store it</li>
+                        	<li>Transfer it</li>
+                        	<li>Use it</li>
+                        </ul>
+				</section>
+
+				<section>
+                    <h3>Store it</h3>
+                    <p>
+                    	The JSON format is native in JavaScript
+                    </p>
+				</section>
+
+				<section>
+                    <h3>JSON Example</h3>
+                    <pre><code contenteditable>
+{
+    "firstName": "Peter",
+    "lastName": "Driesen",
+    "age": 43,
+    "address": {
+        "streetAddress": "Proffessor Kochstraat 21",
+        "city": "Hilversum",
+        "province": "NH"
+    },
+    "children": ["Sara", "Jeroen","Daniel"]
+}
+                    </code></pre>
+				</section>
+
+				<section>
+                    <h3>JSON Example</h3>
+                    <pre><code contenteditable>
+var person = {
+    "firstName": "Peter",
+    "lastName": "Driesen",
+    "age": 43,
+    "address": {
+        "streetAddress": "Proffessor Kochstraat 21",
+        "city": "Hilversum",
+        "province": "NH"
+    },
+    "children": ["Sara", "Jeroen","Daniel"]
+};
+
+console.log(person.address.city);
+                    </code></pre>
+				</section>
+
+				<section>
+                    <h3>Transfer it</h3>
+                    <p>
+                    	AJAX is not only a football team:
+<pre><code contenteditable>
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+	if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+		console.log(xmlhttp.responseText);
+	}
+}
+
+xmlhttp.open("GET","/thumbpage/page,2",true);
+xmlhttp.send();
+</code></pre>
+<a href="http://www.agame.com/games/best.html">agame.com</a>
+                    </p>
+<aside class="notes">
+    <pre>
+        Run this in AGAME.COM AND BEAUTIFY RESPONSE
+    </pre>
+</aside>
+				</section>
+
+
+                <section>
+                    <p>
+                    	AJAX calls can only be done in the same domain
+                    </p>
+                     <p>
+                    	Use JSONP to retrieve data from another domain
+                    </p>
+				</section>
+
+					<section>
+                        <h3>Example of JSONP</h3>
+                        <pre><code contenteditable>
+&lt;script&gt;
+var render = function(dataToRender){
+	for(i=0;i&lt;dataToRender.results.length;i++){	
+	  console.log(dataToRender.results[i].from_user_name);
+	}
+}
+&lt;/script&gt;
+
+&lt;script src="http://search.twitter.com/search.json?since_id=91770779645124609&q=spilgames&callback=render"&gt;&lt;/script&gt;
+                    </code></pre>
+                    </section>
+                    
+
+                <section>
+                    <h3>Use it</h3>
+                    <p>
+                    	JSON === Object
+                    </p>
+				</section>
+
+                <section>
+                	<h3>Bonus: Timed Functions</h3>
+                        <pre><code contenteditable>
+setTimeout(function(){console.log("Two seconds have passed!")},2000);
+setInterval(function(){var i=0; console.log(++i)},1000);
+                    	</code></pre>
+                </section>
+
+                <section>
+                	<h3>Better:</h3>
+                        <pre><code contenteditable>
+var i=0; 
+setInterval(function(){console.log(++i);},1000);
+                    	</code></pre>
+                </section>
+
+                <section>
+                    <p>
+                    	Questions?
+                    </p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="./reveal.js/lib/js/head.min.js"></script>
+		<script src="./reveal.js/js/reveal.min.js"></script>
+
+		<script>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
