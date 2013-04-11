@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>JS Course - Objects & functions</title>
+
+		<meta name="description" content="Chapter 3 of the Spil JS Course">
+		<meta name="author" content="">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+		<link rel="stylesheet" href="./reveal.js/css/reveal.min.css">
+		<link rel="stylesheet" href="./reveal.js/css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet 
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+		-->
+
+		<style>
+			#spil-logo{
+				position: absolute;
+				top: 0;
+				left: 20px;
+				max-width: 16%;
+			}
+
+			h4 {
+				text-align: left;
+			}
+			
+			.under-titile{
+				text-align: left;
+				margin-left: 50px !important;
+				margin-right: 50px !important;
+				font-size: 27px !important;
+			}
+		</style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<img id="spil-logo" src="./img/spillogo.jpg">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>JS Course</h1>
+					<h3>Objects & Functions</h3>
+				</section>
+
+				<section>
+					<h3>Type: undefined</h3>
+					A variable has the type undefined when it is declared, but no value has been assigned to it.
+<pre><code contenteditable>var novalue;
+
+alert(novalue);     // undefined
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Checking the type with 'typeof'</h3>
+					Use the typeof statement to get the type of a variable or value
+					<br>
+					The result is a string with the type name
+					<pre><code contenteditable>typeof "This is a string"       // "string"
+typeof 20                       // "number"
+typeof { foo : 'bar' }          // "object"
+typeof true                     // "boolean"
+typeof function() {}            // "function"
+typeof var_which_doesnt_exist   // "undefined"
+typeof [1, 4, "Hello"]          // "object" ?!
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Objects</h3>
+                    <h4>What are objects?</h4>
+					<ul>
+						<li>An object is a key property storage container</li>
+						<li>Each property is labeled with a string which is called a 'key'</li>
+						<li>The key is used to set or get properties</li>
+						<li>Properties can be of any type</li>
+					</ul>
+					<pre><code contenteditable>var arr = ['John', 26, 'Male'];
+var obj = {
+    'name'   : 'John',
+    'age'    : 26,
+    'gender' : 'Male'
+};
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Other ways to use objects</h3>
+<pre><code contenteditable>// Using .
+var obj = {};
+obj.name   = 'John';
+obj.age    = 26;
+obj.gender = 'Male';
+alert(obj.name);        // 'John'
+
+// Using brackets
+var obj = {};
+obj['name']   = 'John';
+obj['age']    = 26;
+obj['gender'] = 'Male';
+alert(obj['name']);     // 'John'
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Difference between objects and arrays</h3>
+                    Objects have no length property
+                    <br><br>
+					Objects don't have the push, pop, unshift and shift methods
+					<br><br>
+					You cannot use regular for loops			
+				</section>
+
+				<section>
+                    <h3>Looping over objects</h3>
+                    Use a for ... in loop
+					<pre><code contenteditable>var obj = { name : 'John', age : 26, gender : 'Male' };
+
+for (var i in obj) {
+    // i is first 'name', then 'age', then 'gender'
+    alert( "The value of '" + i + "' is " + obj[i] );
+}
+</code></pre>			
+				</section>
+
+				<section>
+                    <h3>Advanced loops</h3>
+                    Use the continue or break statements to end a loop iteration early
+                    <br><br>
+					Works for both arrays and objects!
+				</section>
+
+				<section>
+                    <h3>Continue</h3>
+                    Use continue to end the current iteration and continue with the next iteration
+					<pre><code contenteditable>// Skip all odd numbers, and alert even numbers
+for(var i = 1; i <= 10; i++) {
+    if (i % 2 === 1) {
+        continue;
+    }
+
+    alert(i);
+}
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Using an Array (VI)</h3>
+                    <h4>Traversing through an array (HOW TO DO IT:)</h4>
+					<pre><code contenteditable>for (var i = 0; i < fruits.length; i = i + 1) {
+    alert(fruits[i]);
+}
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Right or wrong?</h3>
+					<pre><code contenteditable>var carBrands = [‘Mercedes’, [‘VW’, ‘Seat’, ‘Audi’], ‘BMW’];
+carBrands[2][1]; //???   
+carBrands[1].join(‘|’); //???
+</code></pre>
+				</section>
+
+				<section>
+                    <h3>Right or wrong?</h3>
+					<pre><code contenteditable>var drinks = [‘coffe’ , “tea”];
+var myChoice = drinks[6];
+
+If (drinks.indexOf(‘tea’) === 1 && drinks.length() > 1) {
+     alert(‘I’ll have a tea!’); //???
+}
+
+if ( drinks.shift() === [‘tea’] ) {
+     alert(‘I will also have a tea!’); //???
+}
+</code></pre>
+				</section>
+
+				<section>
+                    <h1>Assignments</h1>
+				</section>
+
+				<section>
+                    <h3>Add the numbers in an Array</h3>
+                    <ol>
+                    	<li>Create an Array containing 10 different integer numbers</li>
+                    	<li>Calculate the sum of those integers and display it to the user</li>
+                    </ol>
+				</section>
+
+				<section>
+                    <h3>Resources</h3>
+                    More information about the topics discussed
+					<ul>
+						<li>Chapter 4 of <a href="http://eloquentjavascript.net/contents.html">Eloquent JavaScript</a></li>
+					</ul>
+					<br><br>Great resources if you need help
+					<ul>
+						<li><a href="https://developer.mozilla.org/en-US/docs/JavaScript">Mozilla Developer Network</a></li>
+						<li><a href="http://my.safaribooksonline.com/book/programming/javascript/9780596517748">JavaScript: The Good Parts</a> by Douglas Crockford</li>
+					</ul>
+				</section>
+
+				<section>
+                    <h2>Questions & Answers?</h2>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="./reveal.js/lib/js/head.min.js"></script>
+		<script src="./reveal.js/js/reveal.min.js"></script>
+
+		<script>
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

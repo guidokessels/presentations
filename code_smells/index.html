@@ -175,7 +175,7 @@ class cheetahClass
 
 
 					<section class="big-code">
-						Long methods
+						Long methods + Inline Comments
 						<pre><code contenteditable>
     public function index($nicename, $page=1)
     {
@@ -349,7 +349,38 @@ class cheetahClass
 					</code></pre>
 
 					</section>
-					<section>
+				
+				<section>
+					<h2>Uncommunicative names</h2>
+					<p>
+						doStuff()&nbsp;&nbsp;&nbsp;&nbsp;vs&nbsp;&nbsp;&nbsp;&nbsp;fetchTheEmailsAndSendInvitations()
+					</p>
+				</section>
+
+				<section>
+					<h2>Communicative names</h2>
+					<p>
+						fetchEmails()<br/>
+						sendInvites()
+					</p>
+				</section>
+
+				<section>
+					<h2>Too many parameters</h2>
+					<p>
+						function sendEmail($to, $from, $subject, $body, $agent, $images, $cc, $cco, $attachments, $encoding)
+					</p>
+				</section>
+
+				<section>
+					<h2>Too many parameters</h2>
+					<p>Pass an object instead:</p>
+					<p>
+						function sendEmail($email)
+					</p>
+				</section>
+
+									<section>
 						Smells can come also from OO anti-patterns:
 						<ul>
 							<li> God Object </li>
@@ -427,17 +458,6 @@ class HTMLHelper
 	</pre>
 </aside>
 					</section>
-				
-
-				<section>
-					<h2>Useful links</h2>
-					<ul>
-						<li><a href="http://docs.codehaus.org/display/SONAR/Documentation">Sonar Documentation</a></li>
-						<li><a href="http://da067.priv.spillgroup.org">Sonar Dashboard</a></li>
-						<li><a href="http://da030.priv.spillgroup.org:8080">Jenkins</a></li>
-						<li><a href="https://wiki.spilgames.com/wiki/Coding_Standards">Spil coding standards</a></li>
-					</ul>
-				</section>
 
 			</div>
 
